@@ -3,6 +3,7 @@ import Example1 from '../pages/Example1';
 import Example2 from '../pages/Example2';
 import Navbar from '../components/Navbar';
 import Example3 from '../pages/Example3';
+import Example4 from '../pages/Example4';
 
 const AppRouter = () => {
   return (
@@ -12,6 +13,7 @@ const AppRouter = () => {
         <Route path='/' element={<Example1 />} />
         <Route path='/example2' element={<Example2 />} />
         <Route path='/example3' element={<Example3 />} />
+        <Route path='/example4' element={<Example4 />} />
       </Routes>
     </Router>
   );
