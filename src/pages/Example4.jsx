@@ -16,10 +16,18 @@ const Example4 = () => {
       setNumbers(initialState);
     }
   };
+
+  const emptyList = () => {
+    setNumbers([]);
+  };
+
   return (
     <div className='flex-container'>
       <button onClick={removeRandomNumber} className='btn'>
         Remove Random Number
+      </button>
+      <button onClick={emptyList} className='btn'>
+        Empty List
       </button>
       <ul>
         {React.Children.toArray(numbers.map((number) => <li>{number}</li>))}
