@@ -22,9 +22,10 @@ const Example2 = () => {
         Add Random Number
       </button>
       <ul>
-        {randomNumbers.map((randomNumber) => (
-          <li key={randomNumber}>{randomNumber}</li>
-        ))}
+        {/* Eğer key propunun React tarafından otomatik olarak atanmasını istersek aşağıdaki gibi bir yöntem kullanabiliriz. */}
+        {React.Children.toArray(
+          randomNumbers.map((randomNumber) => <li>{randomNumber}</li>)
+        )}
       </ul>
     </div>
   );
