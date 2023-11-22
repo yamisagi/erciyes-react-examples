@@ -41,7 +41,7 @@ const Example7 = () => {
       <button
         className='btn'
         onClick={() => {
-          fetchPosts();
+          setIsFiltered(false);
         }}
       >
         Reset
