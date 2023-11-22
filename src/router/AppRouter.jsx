@@ -6,6 +6,7 @@ import Example3 from '../pages/Example3';
 import Example4 from '../pages/Example4';
 import Example5 from '../pages/Example5';
 import Example6 from '../pages/Example6';
+import Example7 from '../pages/Example7';
 import DetailsPage from '../pages/DetailsPage';
 
 const AppRouter = () => {
@@ -18,8 +19,9 @@ const AppRouter = () => {
         <Route path='/example3' element={<Example3 />} />
         <Route path='/example4' element={<Example4 />} />
         <Route path='/example5' element={<Example5 />} />
-        <Route path='/example6' element={<Example6 />}/>
+        <Route path='/example6' element={<Example6 />} />
         <Route path='/example6/:id' element={<DetailsPage />} />
+        <Route path='/example7' element={<Example7 />} />
       </Routes>
     </Router>
   );
