@@ -3,6 +3,7 @@ import { getUsers, getPosts } from '../service/userPostsService';
 import { userReducer, initialState } from '../reducer/userReducer';
 import UserTable from '../components/UserTable';
 import SelectUser from '../components/SelectUser';
+import Loading from '../components/Loading';
 
 const Example7 = () => {
   const [state, dispatch] = useReducer(userReducer, initialState);
@@ -20,7 +21,7 @@ const Example7 = () => {
   }, []);
 
   if (state.loading) {
-    return <h1 className='loading'>Loading...</h1>;
+    return <Loading />;
   }
 
   return (

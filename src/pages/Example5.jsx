@@ -1,36 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { getProducts } from '../service/productService';
 import ProductTable from '../components/ProductTable';
+import Loading from '../components/Loading';
+
 const Example5 = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('all');
+
   const fetchProducts = async () => {
     const products = await getProducts();
-    console.log(products);
     setProducts(products);
+    setLoading(false);
   };
+
   useEffect(() => {
+    console.log('useEffect');
+    setLoading(true);
     fetchProducts();
   }, []);
 
   const showAll = () => {
-    fetchProducts();
+    setFilter('all');
   };
 
   const removeProduct = (id) => {
-    setProducts(products.filter((product) => product.id !== id));
+    setFilteredProducts(products.filter((product) => product.id !== id));
   };
 
   const showCritical = () => {
-    setProducts(products.filter((product) => product.unitsInStock < 10));
+    setFilter('critical');
+    setFilteredProducts(
+      products.filter((product) => product.unitsInStock < 10)
+    );
   };
 
   const showCheap = () => {
-    setProducts(products.filter((product) => product.unitPrice < 10));
+    setFilter('cheap');
+    setFilteredProducts(products.filter((product) => product.unitPrice < 10));
   };
 
   const showExpensive = () => {
-    setProducts(products.filter((product) => product.unitPrice > 100));
+    setFilter('expensive');
+    setFilteredProducts(products.filter((product) => product.unitPrice > 100));
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className='flex-container'>
@@ -48,7 +66,10 @@ const Example5 = () => {
           Show Expensive
         </button>
       </div>
-      <ProductTable products={products} removeProduct={removeProduct} />
+      <ProductTable
+        products={filter === 'all' ? products : filteredProducts}
+        removeProduct={removeProduct}
+      />
     </div>
   );
 };
