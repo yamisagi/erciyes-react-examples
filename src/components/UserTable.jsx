@@ -1,12 +1,14 @@
 import React from 'react';
 
 const UserTable = ({ state }) => {
+  const { users } = state;
+
   return (
     <div className='table'>
       <table>
         <thead>
           <tr>
-            <th>User ID</th>
+            <th>User Name</th>
             <th>ID</th>
             <th>Title</th>
             <th>Body</th>
@@ -17,7 +19,9 @@ const UserTable = ({ state }) => {
           <tbody>
             {state.posts.map((post) => (
               <tr key={post.id}>
-                <td>{post.userId}</td>
+                <td>
+                  {users.filter((user) => user.id === post.userId)[0].name}
+                </td>
                 <td>{post.id}</td>
                 <td>{post.title}</td>
                 <td>{post.body}</td>
@@ -29,7 +33,9 @@ const UserTable = ({ state }) => {
           <tbody>
             {state.filteredPosts.map((post) => (
               <tr key={post.id}>
-                <td>{post.userId}</td>
+                <td>
+                  {users.filter((user) => user.id === post.userId)[0].name}
+                </td>
                 <td>{post.id}</td>
                 <td>{post.title}</td>
                 <td>{post.body}</td>
