@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer } from 'react';
 import { getUsers, getPosts } from '../service/userPostsService';
 import { userReducer, initialState } from '../reducer/userReducer';
+import UserTable from '../components/UserTable';
+import SelectUser from '../components/SelectUser';
 
 const Example7 = () => {
   const [state, dispatch] = useReducer(userReducer, initialState);
@@ -18,33 +20,8 @@ const Example7 = () => {
   }, []);
 
   if (state.loading) {
-    return (
-      <h1
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        Loading...
-      </h1>
-    );
+    return <h1 className='loading'>Loading...</h1>;
   }
-
-  const handleUserChange = (e) => {
-    const userId = e.target.value;
-    dispatch({ type: 'SET_SELECTED_USER', payload: userId });
-    if (userId) {
-      dispatch({ type: 'SET_IS_FILTERED', payload: true });
-      dispatch({
-        type: 'SET_FILTERED_POSTS',
-        payload: state.posts.filter((post) => post.userId == userId),
-      });
-    } else {
-      dispatch({ type: 'SET_IS_FILTERED', payload: false });
-    }
-  };
 
   return (
     <div className='flex-container'>
@@ -58,52 +35,9 @@ const Example7 = () => {
       >
         Reset
       </button>
-      <select value={state.selectedUser} onChange={handleUserChange}>
-        <option value={''}>Select User</option>
-        {state.users.map((user) => (
-          <option key={user.id} value={user.id}>
-            {user.name}
-          </option>
-        ))}
-      </select>
+      <SelectUser state={state} dispatch={dispatch} />
 
-      <div className='table'>
-        <table>
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Body</th>
-            </tr>
-          </thead>
-
-          {!state.isFiltered && (
-            <tbody>
-              {state.posts.map((post) => (
-                <tr key={post.id}>
-                  <td>{post.userId}</td>
-                  <td>{post.id}</td>
-                  <td>{post.title}</td>
-                  <td>{post.body}</td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-          {state.isFiltered && (
-            <tbody>
-              {state.filteredPosts.map((post) => (
-                <tr key={post.id}>
-                  <td>{post.userId}</td>
-                  <td>{post.id}</td>
-                  <td>{post.title}</td>
-                  <td>{post.body}</td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-        </table>
-      </div>
+      <UserTable state={state} />
     </div>
   );
 };
