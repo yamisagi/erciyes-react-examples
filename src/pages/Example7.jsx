@@ -1,54 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { getUsers, getPosts } from '../service/userPostsService';
+import { userReducer, initialState } from '../reducer/userReducer';
 
 const Example7 = () => {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState([]);
-  const [isFiltered, setIsFiltered] = useState(false);
-  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [state, dispatch] = useReducer(userReducer, initialState);
 
-  const fetchUsers = async () => {
-    const users = await getUsers();
-    setUsers(users);
-    setLoading(false);
-  };
-  const fetchPosts = async () => {
-    const posts = await getPosts();
-    setPosts(posts);
-  };
   useEffect(() => {
     console.log('useEffect'); // Tek bir sefer fetch işlemi yaptığımız için daha az maaliyetli :)
-    fetchUsers();
-    fetchPosts();
+    const fetchData = async () => {
+      const users = await getUsers();
+      const posts = await getPosts();
+      dispatch({ type: 'SET_USERS', payload: users });
+      dispatch({ type: 'SET_POSTS', payload: posts });
+    };
+
+    fetchData();
   }, []);
 
-  if (loading) {
-    return <h1>Loading...</h1>;
+  if (state.loading) {
+    return (
+      <h1
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        Loading...
+      </h1>
+    );
   }
+
   const handleUserChange = (e) => {
     const userId = e.target.value;
+    dispatch({ type: 'SET_SELECTED_USER', payload: userId });
     if (userId) {
-      setIsFiltered(true);
-      setFilteredPosts(posts.filter((post) => post.userId == userId));
+      dispatch({ type: 'SET_IS_FILTERED', payload: true });
+      dispatch({
+        type: 'SET_FILTERED_POSTS',
+        payload: state.posts.filter((post) => post.userId == userId),
+      });
     } else {
-      setIsFiltered(false);
+      dispatch({ type: 'SET_IS_FILTERED', payload: false });
     }
   };
+
   return (
     <div className='flex-container'>
       <h1>Posts</h1>
       <button
         className='btn'
         onClick={() => {
-          setIsFiltered(false);
+          dispatch({ type: 'SET_IS_FILTERED', payload: false });
+          dispatch({ type: 'SET_SELECTED_USER', payload: '' });
         }}
       >
         Reset
       </button>
-      <select onChange={handleUserChange}>
-        <option value=''>Select User</option>
-        {users.map((user) => (
+      <select value={state.selectedUser} onChange={handleUserChange}>
+        <option value={''}>Select User</option>
+        {state.users.map((user) => (
           <option key={user.id} value={user.id}>
             {user.name}
           </option>
@@ -66,9 +78,9 @@ const Example7 = () => {
             </tr>
           </thead>
 
-          {!isFiltered && (
+          {!state.isFiltered && (
             <tbody>
-              {posts.map((post) => (
+              {state.posts.map((post) => (
                 <tr key={post.id}>
                   <td>{post.userId}</td>
                   <td>{post.id}</td>
@@ -78,9 +90,9 @@ const Example7 = () => {
               ))}
             </tbody>
           )}
-          {isFiltered && (
+          {state.isFiltered && (
             <tbody>
-              {filteredPosts.map((post) => (
+              {state.filteredPosts.map((post) => (
                 <tr key={post.id}>
                   <td>{post.userId}</td>
                   <td>{post.id}</td>
